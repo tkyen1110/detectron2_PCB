@@ -1,0 +1,38 @@
+DATALOADER:
+  FILTER_EMPTY_ANNOTATIONS: true
+DATASETS:
+  TRAIN: ("pcb_data_train",)
+  TEST: ("pcb_data_train",)
+MODEL:
+  META_ARCHITECTURE: "RetinaNet"
+  BACKBONE:
+    NAME: "build_retinanet_resnet_fpn_backbone"
+  RESNETS:
+    OUT_FEATURES: ["res3", "res4", "res5"]
+  ANCHOR_GENERATOR:
+    SIZES: !!python/object/apply:eval ["[[x, x * 2**(1.0/3), x * 2**(2.0/3) ] for x in [32, 64, 128, 256, 512 ]]"]
+  FPN:
+    IN_FEATURES: ["res3", "res4", "res5"]
+  RETINANET:
+    IOU_THRESHOLDS: [0.4, 0.5]
+    IOU_LABELS: [0, -1, 1]
+    SMOOTH_L1_LOSS_BETA: 0.0
+  PIXEL_MEAN: [43.30, 56.30, 45.47]
+  PIXEL_STD: [48.09, 52.81, 54.55]
+  RETINANET:
+    NUM_CLASSES: 4
+  ROI_HEADS:
+    NUM_CLASSES: 4
+SOLVER:
+  BASE_LR: 0.0025
+  CHECKPOINT_PERIOD: 1000
+  GAMMA: 0.1
+  IMS_PER_BATCH: 32
+  MAX_ITER: 20000
+  STEPS: (2000, 4000, 8000, 14000)
+INPUT:
+  MIN_SIZE_TRAIN: (320, 352, 384, 416, 448, 480, 512)
+  MAX_SIZE_TRAIN: 512
+  MIN_SIZE_TEST: 480
+  MAX_SIZE_TEST: 512
+VERSION: 2
